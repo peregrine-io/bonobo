@@ -116,7 +116,10 @@ class Lifecycle:
 
     def fatal(self, exc_info, *, level=logging.CRITICAL):
         logging.getLogger(__name__).log(level, repr(self), exc_info=exc_info)
-        self._defunct = True
+        if exc_info:
+            self._defunct = exc_info
+        else:
+            self._defunct = True
 
     def as_dict(self):
         return {
