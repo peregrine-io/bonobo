@@ -31,7 +31,7 @@ class Lifecycle:
         self._started = False
         self._stopped = False
         self._killed = False
-        self._defunct = False
+        self._defunct = None
 
     @property
     def started(self):
@@ -118,7 +118,10 @@ class Lifecycle:
 
     def fatal(self, exc_info, *, level=logging.CRITICAL):
         logging.getLogger(__name__).log(level, repr(self), exc_info=exc_info)
-        self._defunct = True
+        if exc_info:
+            self._defunct = exc_info[1]
+        else:
+            self._defunct = True
 
     def as_dict(self):
         return {
